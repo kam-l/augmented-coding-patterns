@@ -2,7 +2,7 @@
 authors: [kamil_letki]
 ---
 
-# Clean Room Redo
+# Hindsight Redo
 
 ## Problem
 The end of a long session is when you know the most. The context window holds every correction, lesson, and decision that happened along the way — and the right solution often only became visible during or after implementation, as unknown unknowns surfaced. But the work still carries the scars of the discovery path: abandoned approaches, leftover abstractions, patches on patches.
@@ -27,7 +27,7 @@ Asking costs one prompt, and the knowledge it harvests exists nowhere else. But 
 "Plan to throw one away" was a planning discipline; this makes it an executable move — throw it away now, while the window still knows why.
 
 ## Example
-A long session bootstrapped specifications for a virtual-credit-card service by scanning the codebase. At the end, the clean-room question:
+A long session bootstrapped specifications for a virtual-credit-card service by scanning the codebase. At the end, the hindsight question:
 
 > Knowing what we do now, what could have been done better from the start?
 
