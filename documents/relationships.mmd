@@ -40,7 +40,7 @@ graph LR
   patterns/external-context -->|solves| obstacles/context-rot
   patterns/ground-rules -->|solves| obstacles/cannot-learn
   patterns/happy-to-delete -->|solves| anti-patterns/sunk-cost
-  patterns/clean-room-redo -->|solves| anti-patterns/sunk-cost
+  patterns/clean-room-redo -->|related| anti-patterns/sunk-cost
   patterns/knowledge-checkpoint -->|solves| obstacles/non-determinism
   patterns/knowledge-document -->|solves| obstacles/cannot-learn
   patterns/noise-cancellation -->|solves| obstacles/excess-verbosity
@@ -139,6 +139,7 @@ graph LR
   patterns/external-context -->|enables| patterns/focused-agent
   patterns/clean-room-redo <-->|similar| patterns/learning-loop
   patterns/clean-room-redo -->|uses| patterns/happy-to-delete
+  patterns/clean-room-redo -->|uses| patterns/knowledge-checkpoint
   patterns/happy-to-delete <-->|similar| patterns/parallel-implementations
   patterns/happy-to-delete <-->|similar| patterns/playgrounds
   patterns/approved-scenarios <-->|similar| patterns/check-alignment
