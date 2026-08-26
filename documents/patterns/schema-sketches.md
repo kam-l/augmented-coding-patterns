@@ -35,17 +35,16 @@ Task: expose the version history of orders over GraphQL, with chosen fields unpa
 The agent's sketch — a fixed field contract:
 
 ```
-orderVersions(fields: [OrderVersionField])
-└── OrderVersion
-    ├── existing metadata
-    ├── raw: JSON
-    └── individually projected order fields
-
-OrderVersionField enum
-└── whitelists extractable fields, grows with each one
-
-OrderVersionProjection
-└── staging type between raw JSON and the DTO
+orderVersions(fields: [OrderVersionField!])
+├── OrderVersion
+│   ├── metadata: ref, dates, status, tenant, updated_at
+│   ├── supplier            ┐
+│   ├── carrierCode         ├ one typed field per extractable value
+│   └── packageCode         ┘
+├── OrderVersionField enum
+│   └── whitelists the extractable fields, grows with each one
+└── OrderVersionProjection
+    └── stages raw JSON into the typed fields
 ```
 
 Strongly typed DTOs, exactly as the project's own ground rules demand. The review, one question:
@@ -57,24 +56,18 @@ What's the need for separate OrderVersionProjection class?
 The revised sketch:
 
 ```
-GetOrderVersions(extract: string[]?, ...)
-├── keeps metadata projection
-│   └── ref, dates, status, tenant, updated_at
-├── parses paths such as items[0].shipping.carrier.code
-├── converts them to PostgreSQL segments
-│   └── ["items", "0", "shipping", "carrier", "code"]
-└── fills OrderVersion.Extracted[path]
-    └── jsonb_extract_path_text(x.Raw, ...)
-
-OrderVersion
-├── existing metadata fields stay
-└── extracted : Dictionary<string,string?>
-
-OrderVersionField enum
-└── deleted
+orderVersions(extract: [String!])
+├── OrderVersion
+│   ├── metadata: ref, dates, status, tenant, updated_at
+│   └── extracted: Dictionary<string, string?>
+│       └── jsonb_extract_path_text(raw, ...)   <- resolved server-side
+├── OrderVersionField enum
+│   └── deleted
+└── OrderVersionProjection
+    └── deleted
 ```
 
-One dynamic map instead of a growing enum, a staging class, and a projected field per extractable value — and the projection stays server-side:
+One dynamic map instead of a growing enum, a staging class, and a typed field per extractable value:
 
 ```
 orderVersions(
