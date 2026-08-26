@@ -14,15 +14,15 @@ Before ending the session, ask:
 
 **"Knowing everything we know now, what could have been done better from the start?"**
 
-Then act on the answer while the context is still loaded:
+— and ask for concrete actionables. The answer is open-ended; you don't know in advance where the hindsight will land:
 
-- **Redo the work**: refactor or rebuild toward what you would have built knowing the end state — delete abstractions that only existed to serve dead ends
-- **Redo the plan**: restructure specs or task boundaries before the next phase inherits the mess
-- **Redo the setup**: when the answer points past the artifact at how the session itself was run, turn it into instructions or guardrails, so the next session starts where this one ended
+- **The work**: refactor or rebuild toward what you would have built knowing the end state — delete abstractions that only existed to serve dead ends
+- **The plan**: restructure specs or task boundaries before the next phase inherits the mess
+- **The setup**: new instructions or guardrails for the agent, so the next session starts where this one ended
 
 The agent proposes, grounded in what actually happened — a regret that can't point to a specific discovery from the session is noise, and "nothing" is a legitimate answer. You decide which redos are worth doing.
 
-Asking costs one prompt, and the knowledge it harvests exists nowhere else. But a long session is also where context rot lives: if the window is too degraded to trust with the rework itself, capture the answer as a redo brief and execute it in a fresh session seeded with that brief.
+Only the analysis needs the loaded window; the actionables don't. Execute them in-session, delegate them to a fresh session seeded with a redo brief, or defer them — asking costs one prompt, and the knowledge it harvests exists nowhere else.
 
 "Plan to throw one away" was a planning discipline; this makes it an executable move — throw it away now, while the window still knows why.
 
@@ -45,3 +45,18 @@ card-operations.md          security-authorization.md
 Cross-references were updated so each spec owned its subject instead of repeating shared behavior. This topology only became visible after the full pass over the codebase.
 
 In a follow-up session on the same service, the answer pointed at setup instead: the counterfactual surfaced a pipeline reordering that no individual correction had — "vocabulary scanning should run before parallel scans, dead-code detection should be a pre-pass" — which became a reusable scan playbook for the sessions that followed.
+
+An MVP of the pattern as a skill:
+
+```markdown
+---
+name: hindsight-redo
+description: Knowing everything we do now, what could have been done better from the start?
+disable-model-invocation: true
+---
+Answer the question: **Knowing everything we do now, what could have been done better from the start?**
+
+Showcase findings to user, with recommended actionables (if any).
+
+Don't make up findings if you don't find any.
+```
