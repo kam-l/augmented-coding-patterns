@@ -79,6 +79,9 @@ graph LR
 
   patterns/schema-sketches -->|solves| obstacles/structural-blindness
 
+  patterns/dialectic-review -->|solves| obstacles/compliance-bias
+  patterns/dialectic-review -->|solves| obstacles/solution-fixation
+
   %% Pattern → Pattern relationships (enables, uses, similar, alternative)
   patterns/reference-docs -->|enables| patterns/knowledge-composition
   patterns/hooks -->|enables| patterns/habit-hooks
@@ -174,6 +177,9 @@ graph LR
   patterns/schema-sketches -->|extends| patterns/check-alignment
   patterns/schema-sketches -->|uses| patterns/text-native
   patterns/schema-sketches <-->|similar| patterns/diagrams-as-code
+
+  patterns/dialectic-review -->|extends| patterns/feedback-flip
+  patterns/dialectic-review -->|uses| patterns/focused-agent
 
   %% Anti-pattern → Obstacle relationships (causes)
   anti-patterns/distracted-agent -->|causes| obstacles/limited-focus
