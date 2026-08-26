@@ -12,7 +12,7 @@ Zoom in one level from Schema Sketches: have the agent write the approved sketch
 
 The draft is not implementation. It is the binding surface made concrete, and that buys two things:
 
-- **Corrections become code annotations, not chat.** Write the instruction as a bare `AGENT: ...` one-liner on the code it corrects — not a comment. The instruction is anchored to a concrete code area, no describing where it applies, no agent guessing which part you meant. And because a bare line doesn't compile, every unaddressed annotation is a build error — an attention anchor that cannot be skimmed past, gone only when honored.
+- **Corrections become code annotations, not chat.** Write each instruction as an Agent Annotation — a bare `AGENT: ...` one-liner on the code it corrects, anchored to the exact code area and a build error until honored.
 - **Tests wire up before implementation.** The structure compiles, so tests can be written and run against it now — Approved Scenarios in concrete form, or the RED phase of TDD.
 
 Then let the agent fill the bodies. Names, shapes, callers and failing tests are already fixed; implementation becomes the constrained step. The constraint is the point — it buys autonomy: structure-level mistakes and over-engineering are pre-empted before generation, and the wired scenarios stand as the human-approved oracle, so the agent can be left to run with less supervision.
