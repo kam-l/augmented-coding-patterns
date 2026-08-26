@@ -33,6 +33,10 @@ AGENT: split this file - take non-trivial records into their separate files. Thi
 AGENT: this whole file is bloat and redundancy, it should be a simple local method creating name per format.
 ```
 
+```csharp
+AGENT: remove custom persisted scheduled report logs
+```
+
 No instruction names its target by description — its position is its address. The agent converted the annotations into a plan before touching code:
 
 ```
@@ -40,10 +44,9 @@ Planned implementation (strict, minimal scope):
 1) Apply all AGENT directives in scheduled-reports files
    (split/move/collapse/simplify, remove persisted logs)
 2) Propagate the refactor across Application/Domain/Persistence/Service wiring
-3) Update scheduled-report specs only where code behavior changed
-4) Run build + scheduled-reports-focused tests
+3) Run build + scheduled-reports-focused tests
 ```
 
-Then it edited the drafted surface instead of speculating a new architecture: `RecipientId` became `string?`, the non-trivial records moved into their own files, the execution service kept only main-flow methods, the filename helper collapsed toward a local method — and the `AGENT:` lines were removed as each was honored.
+Then it edited the drafted surface instead of speculating a new architecture: `RecipientId` became `string?`, the non-trivial records moved into their own files, the execution service kept only main-flow methods, the filename helper collapsed toward a local method, the custom persisted logs deleted — and the `AGENT:` lines were removed as each was honored.
 
 One caveat from this session: the build and application tests passed, but some scheduled-report integration expectations still needed follow-up after the strict refactor. The draft constrains structure; it does not make the last mile free.
