@@ -18,22 +18,22 @@ Then act on the answer while the context is still loaded:
 - **Redo the plan**: restructure specs or task boundaries before the next phase inherits the mess
 - **Redo the setup**: turn hindsight into new instructions or guardrails for the agent, so the next session starts where this one ended
 
-Make the redo verifiable: give the agent an explicit checklist of what must be gone and what must be preserved, and have it verify the result against that list.
-
 ## Example
-A long session on a Quartz-based workflow scheduler accreted its discovery path: four migrations and a custom replay-tracking layer (replay cursors, occurrence intents, lease and completion columns) — all built before it became clear that Quartz's native misfire handling covered the need.
+A long session bootstrapped specifications for a virtual-credit-card service by scanning the codebase. At the end, the clean-room question:
 
-The end-of-session clean-room prompt:
+> Knowing what we do now, what could have been done better from the start?
 
-> Perform a clean-room verification... Simplify to Quartz native misfire handling only; remove replay/cursor/intent/lease tracking artifacts.
+The answer surfaced problems invisible at the start: shared concepts were duplicated across 3–4 specs because no spec was designated authoritative; "Card Operations" had become a catch-all for cross-cutting concerns; "Security" mixed auth with operational infrastructure; Vendor/Supplier terminology should have been in the initial prompts.
 
-with an explicit checklist: no `ScheduleReplayCursors` schema, no `ScheduleReplayOccurrenceIntents`, no `DispatchCompletedAtUtc` or `DispatchLeaseUntilUtc` columns; preserve Quartz `qrtz_*` persistence and `FailedScheduleWorkflow` re-dispatch; consolidate the branch's migrations.
+The redo wasn't advisory — the user chose "Restructure to 9 specs", and the agent split the offenders:
 
-The redo deleted the four migrations, `QuartzDispatchFailureStore`, and the `SchedulingDispatchFailure` entity, replacing them with one consolidated migration ending in idempotent cleanup:
-
-```sql
-DROP TABLE IF EXISTS "Workflows"."ScheduleReplayOccurrenceIntents";
-DROP TABLE IF EXISTS "Workflows"."ScheduleReplayCursors";
+```
+card-operations.md          security-authorization.md
+├── card-lifecycle.md       ├── security-auth.md
+└── cross-cutting-           └── operational-
+    infrastructure.md            infrastructure.md
 ```
 
-The branch ended with a smaller persistence model, a single-migration chain, and 77 scheduling tests passing — a cleanup no fresh session could have specified without re-learning everything this one already knew.
+Cross-references were updated so each spec owned its subject instead of repeating shared behavior. A fresh session couldn't have proposed this topology — it took a full pass over the codebase to learn which boundaries were wrong.
+
+In a follow-up session on the same service, the clean-room answer went the other direction — into setup: "vocabulary scanning should run before parallel scans", "dead-code detection should be a pre-pass", "scanner file-writing is unreliable, return structured findings instead" became a reusable scan-pipeline playbook (`META.md`) and new entries in `AGENTS.md`, so the lessons outlived the session that paid for them.
