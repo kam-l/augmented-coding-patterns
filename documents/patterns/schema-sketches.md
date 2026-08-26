@@ -30,17 +30,22 @@ Recurring finds, and their fixes:
 The sketch is explicit where the plan was abstract, and visual where the plan was narrative. Iterating here costs a few hundred tokens; iterating after implementation costs the unneeded code, the repairs, and every later change routed through a seam that should not exist. The sketch does not guarantee a better decision — it makes the decision visible and nearly free to reverse, at the one moment when reversing is nearly free.
 
 ## Example
-A GraphQL endpoint exposing the version history of orders, with chosen fields extracted from each version's raw JSON. The agent's sketch:
+Task: expose the version history of orders over GraphQL, with chosen fields unpacked from each version's raw JSON.
+
+The agent's sketch — a fixed field contract:
 
 ```
-orderVersions(fields: [OrderVersionField!])
-+- OrderVersion
-|  +- metadata: ref, status, updated_at
-|  +- one typed field per extractable value
-+- OrderVersionField enum
-|  +- whitelists extractable fields, grows with each one
-+- OrderVersionProjection
-   +- staging type between raw JSON and the DTO
+orderVersions(fields: [OrderVersionField])
+└── OrderVersion
+    ├── existing metadata
+    ├── raw: JSON
+    └── individually projected order fields
+
+OrderVersionField enum
+└── whitelists extractable fields, grows with each one
+
+OrderVersionProjection
+└── staging type between raw JSON and the DTO
 ```
 
 Strongly typed DTOs, exactly as the project's own ground rules demand. The review, one question:
@@ -52,12 +57,33 @@ What's the need for separate OrderVersionProjection class?
 The revised sketch:
 
 ```
-orderVersions(extract: ["items[0].shipping.carrier.code"])
-+- OrderVersion
-|  +- metadata: unchanged
-|  +- extracted: Dictionary<string, string?>   <- paths resolved server-side
-+- OrderVersionField enum -- deleted
-+- OrderVersionProjection -- deleted
+GetOrderVersions(extract: string[]?, ...)
+├── keeps metadata projection
+│   └── ref, dates, status, tenant, updated_at
+├── parses paths such as items[0].shipping.carrier.code
+├── converts them to PostgreSQL segments
+│   └── ["items", "0", "shipping", "carrier", "code"]
+└── fills OrderVersion.Extracted[path]
+    └── jsonb_extract_path_text(x.Raw, ...)
+
+OrderVersion
+├── existing metadata fields stay
+└── extracted : Dictionary<string,string?>
+
+OrderVersionField enum
+└── deleted
+```
+
+One dynamic map instead of a growing enum, a staging class, and a projected field per extractable value — and the projection stays server-side:
+
+```
+orderVersions(
+  extract: ["items[0].shipping.carrier.code", "supplier"]
+) {
+  ref
+  status
+  extract
+}
 ```
 
 Explicit strongly typed fields in a DTO are *locally correct* — the ground rules literally ask for them. In the context of the wider structure and requirements they were wrong: flexibility was this endpoint's whole point, and every new field would have grown the enum and its projection. No static rule could mark this endpoint as the exception; everywhere else, the rule is right.
