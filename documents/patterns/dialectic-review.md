@@ -7,7 +7,7 @@ authors: [kamil_letki]
 ## Problem
 Some artifacts are expensive to be wrong about: an API contract, a schema, a plan, a document others will build on. A single review pass gives them a soft gate. Ask an agent to review critically and trained agreeableness pulls the verdict toward approval-with-nits; tell it to attack and every objection arrives pressed with equal confidence, the first plausible one hardest — and nobody in the room is making the case for the artifact.
 
-This is not Feedback Flip — Feedback Flip refocuses one agent from producing to critiquing, and stays the right tool for routine diffs. This puts the evaluation itself on trial.
+This is Feedback Flip escalated — the flip refocuses one agent from producing to critiquing, and stays the right tool for routine diffs; when the stakes justify it, the escalation puts the evaluation itself on trial.
 
 ## Pattern
 Try the artifact in court.
@@ -34,7 +34,7 @@ rewards precision over stubbornness."
 
 Each piece is load-bearing. A neutral reviewer softens; a mandate does not — and the advocate is no decoration, it forces the strongest case for the artifact to exist so the judge is not synthesizing from an attack and a shrug. The concession instruction is the anti-theater mechanism: openings are just claim lists, and without permission to fold, two agents will perform disagreement forever. A withdrawn count is the strongest evidence the judge gets. The shape is borrowed from debate-based oversight ([Irving, Christiano, Amodei, "AI Safety via Debate"](https://arxiv.org/abs/1805.00899)): the wager is that judging a debate between opposed experts is easier than producing the review yourself.
 
-One run costs about 200k tokens — two openings, two rebuttals, a judgment. Spend it where being wrong is expensive; a routine diff does not need a trial.
+One run costs about 200k tokens — two openings, two rebuttals, a judgment. Spend it where being wrong is expensive; a routine diff does not need a trial. Past the baseline, two gauges escalate further: rounds — more rebuttals, or unbounded until neither side moves a count — and participants — extra prosecutors with narrow mandates, one on performance, one on security. The rebuttal exchange works best in a harness where subagents can address each other directly, such as [Claude Code agent teams](https://code.claude.com/docs/en/agent-teams) and its `SendMessage` tool, at a still higher token cost; elsewhere the main session relays each filing.
 
 ## Example
 The pattern's first documented run reviewed this collection's own Schema Sketches / Structural Blindness contribution, pre-merge. Advocate and prosecutor each read the two documents, CONTRIBUTE.md, eight neighboring documents, and the relationships graph, then filed structured openings — GAP/EVIDENCE/FRAMING/CONCESSIONS/VERDICT for the defense, REDUNDANCY/EVIDENCE/FORM/GRAPH/VERDICT with per-count severity for the prosecution.
