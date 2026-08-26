@@ -170,6 +170,10 @@ graph LR
   patterns/poor-persons-skill -->|related| patterns/semantic-anchors
   patterns/poor-persons-skill -->|related| patterns/extract-knowledge
 
+  patterns/surface-draft -->|extends| patterns/schema-sketches
+  patterns/surface-draft -->|uses| patterns/semantic-zoom
+  patterns/surface-draft -->|enables| patterns/approved-scenarios
+
   patterns/schema-sketches -->|related| patterns/phased-delivery
   patterns/schema-sketches -->|extends| patterns/check-alignment
   patterns/schema-sketches -->|uses| patterns/text-native
