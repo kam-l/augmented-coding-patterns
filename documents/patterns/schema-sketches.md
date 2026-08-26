@@ -30,32 +30,34 @@ Recurring finds, and their fixes:
 The sketch is explicit where the plan was abstract, and visual where the plan was narrative. Iterating here costs a few hundred tokens; iterating after implementation costs the unneeded code, the repairs, and every later change routed through a seam that should not exist. The sketch does not guarantee a better decision — it makes the decision visible and nearly free to reverse, at the one moment when reversing is nearly free.
 
 ## Example
-Adding a maintenance endpoint that replays booking events. The agent's sketch:
+A GraphQL endpoint exposing the version history of orders, with chosen fields extracted from each version's raw JSON. The agent's sketch:
 
 ```
-HostedServices/BookingEventsHandler     Services/BookingEventProcessor   <- new
-  +- intake logic (unchanged)             +- HandleEvent()
-                                          +- HandleBookingVersionAsync()
-Controllers/MaintenanceController         +- HandleSupplierUpdateAsync()
-  +- POST /sync -> processor              +- HandleStatusUpdateAsync()
+orderVersions(fields: [OrderVersionField!])
++- OrderVersion
+|  +- metadata: ref, status, updated_at
+|  +- one typed field per extractable value
++- OrderVersionField enum
+|  +- whitelists extractable fields, grows with each one
++- OrderVersionProjection
+   +- staging type between raw JSON and the DTO
 ```
 
-One new class, wrapping methods the handler already had, so the controller and the message handler could share them.
-
-The review comment, in full:
+Strongly typed DTOs, exactly as the project's own ground rules demand. The review, one question:
 
 ```
-revert BookingEventProcessor - it was introduced by changes
+What's the need for separate OrderVersionProjection class?
 ```
 
-Collapsing it back cost three `public` keywords. Building it would have cost ~200 lines, still coupled to the handler it came from. Two callers, extract a service — a correctly applied principle; whether the seam earns its keep is a system-level call.
-
-**A rule correctly followed can still be wrong.** A GraphQL endpoint exposing booking versions, with fields extracted from raw JSON. The agent's sketch: a `BookingVersionField` enum whitelisting extractable fields, a staging class, one DTO field per enum member — strongly typed DTOs, exactly as the project's ground rules demand.
-
-The review, one question:
+The revised sketch:
 
 ```
-What's the need for separate BookingVersionProjection class?
+orderVersions(extract: ["items[0].shipping.carrier.code"])
++- OrderVersion
+|  +- metadata: unchanged
+|  +- extracted: Dictionary<string, string?>   <- paths resolved server-side
++- OrderVersionField enum -- deleted
++- OrderVersionProjection -- deleted
 ```
 
-Revised sketch: enum and staging class deleted. Callers pass JSON paths — `extract: ["services[0].car.package.code"]` — resolved server-side into one `extracted: Dictionary<string,string?>`. Flexibility was this endpoint's whole point; every new field would have grown the enum. No static rule could mark this endpoint as the exception — everywhere else, the rule is right.
+Explicit strongly typed fields in a DTO are *locally correct* — the ground rules literally ask for them. In the context of the wider structure and requirements they were wrong: flexibility was this endpoint's whole point, and every new field would have grown the enum and its projection. No static rule could mark this endpoint as the exception; everywhere else, the rule is right.
