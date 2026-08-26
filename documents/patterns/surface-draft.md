@@ -15,6 +15,6 @@ The draft is not implementation. It is the binding surface made concrete, and th
 - **Corrections become code annotations, not chat.** Write the instruction as a comment on the method it corrects. The instruction is anchored to a concrete code area — no describing where it applies, no agent guessing which part you meant.
 - **Tests wire up before implementation.** The structure compiles, so tests can be written and run against it now — Approved Scenarios in concrete form, or the RED phase of TDD.
 
-Then let the agent fill the bodies. Names, shapes, callers and failing tests are already fixed; implementation becomes the constrained step.
+Then let the agent fill the bodies. Names, shapes, callers and failing tests are already fixed; implementation becomes the constrained step. The constraint is the point — it buys autonomy: structure-level mistakes and over-engineering are pre-empted before generation, and the wired scenarios stand as the human-approved oracle, so the agent can be left to run with less supervision.
 
 ## Example
