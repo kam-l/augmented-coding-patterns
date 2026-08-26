@@ -30,3 +30,19 @@ To make the marker one keystroke, a VS Code keybinding injects it at the cursor 
   "when": "editorTextFocus"
 }
 ```
+
+On the agent side, the generic prompt packages into a one-line skill, invoked as `/address-annotations`:
+
+```markdown
+---
+name: address-annotations
+description: "Follow instructions left in `AGENT: ` annotations throughout code."
+disable-model-invocation: true
+---
+Find all `AGENT: ` annotations in code then address them:
+- each targets code area it's located in
+- if it's a question, add a comment with explanation
+- if it's a request, change the code as instructed
+```
+
+Note the skill's second bullet: annotations aren't only change requests. A question dropped on a puzzling line comes back answered as a comment, in place.
