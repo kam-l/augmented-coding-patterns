@@ -43,4 +43,4 @@ The rebuttal round did the sorting. The prosecutor withdrew its lead count — "
 
 The judge ruled per count and overruled both sides twice: kept a coined name the prosecution wanted gone; retyped a graph edge to `related` instead of dropping it.
 
-The net catch: three of four citations supported claims adjacent to the ones they were attached to — a defect the authoring session missed across five drafting rounds. The amended contribution merged.
+The net catch: three of four citations supported claims adjacent to the ones they were attached to — a defect that had survived every drafting round. The amended contribution merged.
