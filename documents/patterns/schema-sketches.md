@@ -36,15 +36,12 @@ The agent's sketch — a fixed field contract:
 
 ```
 orderVersions(fields: [OrderVersionField!])
-├── OrderVersion
-│   ├── metadata: ref, dates, status, tenant, updated_at
-│   ├── supplier            ┐
-│   ├── carrierCode         ├ one typed field per extractable value
-│   └── packageCode         ┘
-├── OrderVersionField enum
-│   └── whitelists the extractable fields, grows with each one
-└── OrderVersionProjection
-    └── stages raw JSON into the typed fields
+└── OrderVersion
+    ├── metadata: ref, dates, status, tenant, updated_at
+    └── OrderVersionProjection
+        ├── OrderVersionField supplier
+        ├── OrderVersionField carrierCode
+        └── OrderVersionField packageCode
 ```
 
 Strongly typed DTOs, exactly as the project's own ground rules demand. The review, one question:
@@ -57,17 +54,13 @@ The revised sketch:
 
 ```
 orderVersions(extract: [String!])
-├── OrderVersion
-│   ├── metadata: ref, dates, status, tenant, updated_at
-│   └── extracted: Dictionary<string, string?>
-│       └── jsonb_extract_path_text(raw, ...)   <- resolved server-side
-├── OrderVersionField enum
-│   └── deleted
-└── OrderVersionProjection
-    └── deleted
+└── OrderVersion
+    ├── metadata: ref, dates, status, tenant, updated_at
+    └── extracted: Dictionary<string, string?>
+        └── jsonb_extract_path_text(raw, ...)   <- any path, resolved server-side
 ```
 
-One dynamic map instead of a growing enum, a staging class, and a typed field per extractable value:
+`OrderVersionProjection` and the `OrderVersionField` enum — deleted. One dynamic map replaces the growing enum, the staging class, and a typed field per extractable value:
 
 ```
 orderVersions(
