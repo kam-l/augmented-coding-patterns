@@ -43,6 +43,7 @@ Find all `AGENT: ` annotations in code then address them:
 - each targets code area it's located in
 - if it's a question, add a comment with explanation
 - if it's a request, change the code as instructed
+- remove annotation after resolving it
 ```
 
 Note the skill's second bullet: annotations aren't only change requests. A question dropped on a puzzling line comes back answered as a comment, in place.
