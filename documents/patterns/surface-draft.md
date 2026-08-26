@@ -12,7 +12,7 @@ Zoom in one level from Schema Sketches: have the agent write the approved sketch
 
 The draft is not implementation. It is the binding surface made concrete, and that buys two things:
 
-- **Corrections become code annotations, not chat.** Write each instruction as an Agent Annotation — a bare `AGENT: ...` one-liner on the code it corrects, anchored to the exact code area and a build error until honored.
+- **Corrections become code annotations, not chat.** Write each instruction as a Code Annotation — a bare `AGENT: ...` one-liner on the code it corrects, anchored to the exact code area and a build error until honored.
 - **Tests wire up before implementation.** The structure compiles, so tests can be written and run against it now — Approved Scenarios in concrete form, or the RED phase of TDD.
 
 Then let the agent fill the bodies. Names, shapes, callers and failing tests are already fixed; implementation becomes the constrained step. The constraint is the point — it buys autonomy: structure-level mistakes and over-engineering are pre-empted before generation, and the wired scenarios stand as the human-approved oracle, so the agent can be left to run with less supervision.
@@ -30,13 +30,9 @@ AGENT: split this file - take non-trivial records into their separate files. Thi
 ```
 
 ```csharp
-AGENT: this whole file is bloat and redundancy, it should be a simple local method creating name per format.
+AGENT: this whole file is bloat and redundancy, it should be a simple local method building the file name per export format.
 ```
 
-```csharp
-AGENT: remove custom persisted scheduled report logs
-```
+No instruction names its target by description — its position is its address. The agent edited the drafted surface instead of speculating a new architecture: `RecipientId` became `string?`, the record types moved into their own files, the helper class collapsed into a local method — and the `AGENT:` lines were removed as each was honored.
 
-No instruction names its target by description — its position is its address. The agent edited the drafted surface instead of speculating a new architecture: `RecipientId` became `string?`, the non-trivial records moved into their own files, the execution service kept only main-flow methods, the filename helper collapsed toward a local method, the custom persisted logs deleted — and the `AGENT:` lines were removed as each was honored.
-
-One caveat from this session: the build and application tests passed, but some scheduled-report integration expectations still needed follow-up after the strict refactor. The draft constrains structure; it does not make the last mile free.
+One caveat from this session: the build and unit tests passed, but a few integration tests still needed follow-up after the strict refactor. The draft constrains structure; it does not make the last mile free.

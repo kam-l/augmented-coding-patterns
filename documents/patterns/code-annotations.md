@@ -2,7 +2,7 @@
 authors: [kamil_letki]
 ---
 
-# Agent Annotations
+# Code Annotations
 
 ## Problem
 Corrections travel through chat, detached from their target: you describe the place — "the helper in the execution service, the second overload" — and the agent resolves the description by interpretation. Writing the instruction as a code comment anchors it better, but a comment can be skimmed past like any other comment, and nothing forces it to be honored or cleaned up.
