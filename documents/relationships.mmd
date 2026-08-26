@@ -77,6 +77,8 @@ graph LR
   patterns/poor-persons-skill -->|solves| obstacles/hallucinations
   patterns/semantic-anchors -->|solves| obstacles/hallucinations
 
+  patterns/schema-sketches -->|solves| obstacles/structural-blindness
+
   %% Pattern → Pattern relationships (enables, uses, similar, alternative)
   patterns/reference-docs -->|enables| patterns/knowledge-composition
   patterns/hooks -->|enables| patterns/habit-hooks
@@ -168,6 +170,10 @@ graph LR
   patterns/poor-persons-skill -->|related| patterns/semantic-anchors
   patterns/poor-persons-skill -->|related| patterns/extract-knowledge
 
+  patterns/schema-sketches -->|uses| patterns/phased-delivery
+  patterns/schema-sketches -->|uses| patterns/check-alignment
+  patterns/schema-sketches -->|uses| patterns/text-native
+
   %% Anti-pattern → Obstacle relationships (causes)
   anti-patterns/distracted-agent -->|causes| obstacles/limited-focus
   anti-patterns/distracted-agent -->|causes| obstacles/context-rot
@@ -197,6 +203,8 @@ graph LR
   obstacles/solution-fixation -->|related| obstacles/compliance-bias
   obstacles/selective-hearing -->|related| obstacles/context-rot
   obstacles/negative-bleedthrough -->|related| obstacles/selective-hearing
+  obstacles/structural-blindness -->|causes| obstacles/degrades-under-complexity
+  obstacles/structural-blindness -->|related| obstacles/excess-verbosity
   patterns/point-the-target -->|solves| obstacles/negative-bleedthrough
 
   %% Obstacle → Anti-pattern relationships (related)
