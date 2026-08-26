@@ -50,3 +50,18 @@ revert BookingEventProcessor - it was introduced by changes
 Collapsing it back cost three `public` keywords. Building it would have cost ~200 lines, still coupled to the handler it came from.
 
 Two callers, extract a service — a principle correctly applied. Whether that seam earns its keep is a system-level call, and the sketch is where you get to make it.
+
+**A rule correctly followed can still be wrong.** A GraphQL endpoint exposing booking versions, with fields extracted from raw JSON. The agent's sketch: a `BookingVersionField` enum whitelisting extractable fields, a `BookingVersionProjection` staging class, one DTO field per enum member — strongly typed DTOs, exactly as the project's ground rules demand.
+
+The review, one question:
+
+```
+What's the need for separate BookingVersionProjection class?
+```
+
+Revised sketch: enum and staging class deleted. Callers pass JSON paths — `extract: ["services[0].car.package.code"]` — the service resolves each path server-side, and results land in one `extracted: Dictionary<string,string?>`. Flexibility was this endpoint's whole point; every new field would have grown the enum. No rule you write into the agent's instructions can make that call, because in most other places the rule is right.
+
+Recurring shapes the sketch catches:
+- duplicate persisted state → one source of truth
+- a parallel compatibility layer → extend the existing live types
+- many fixed schema members → one dynamic map with explicit extraction
